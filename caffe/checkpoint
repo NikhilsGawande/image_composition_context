@@ -1,0 +1,2 @@
+model_checkpoint_path: "transform-network"
+all_model_checkpoint_paths: "transform-network"

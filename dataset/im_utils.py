@@ -1,6 +1,6 @@
 import numpy as np
-#import _pickle as cPickle
-import cPickle
+import _pickle as cPickle
+#import cPickle
 import heapq
 import os
 from IPython.core.debugger import Tracer

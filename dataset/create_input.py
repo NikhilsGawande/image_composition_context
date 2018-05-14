@@ -9,8 +9,12 @@ Created on Fri May 11 00:09:23 2018
 import pickle
 from random import shuffle
 
-a  = open('../pkl/pairs_data.pkl', 'rb')
-p = pickle.load(a)
+a_train  = open('../pkl/pairs_train_data.pkl', 'rb')
+p_train = pickle.load(a_train)
+
+a_test  = open('../pkl/pairs_test_data.pkl', 'rb')
+p_test = pickle.load(a_test)
+
 
 features_train = []
 att_svms_train = []
@@ -24,11 +28,14 @@ obj_svms_train_neg = []
 y = []
 one = [1]
 zero = [0]
+
 features_test = []
+pair_keys_test = []
 att_svms_test = []
 obj_svms_test = []
 
-for i in p : 
+
+for i in p_train : 
 	images = []
 	features = []
 	att_svms = []
@@ -45,13 +52,13 @@ for i in p :
 	f_temp = []
 	att_svms_temp = []
 	obj_svms_temp = []
-	f_pos_size = int(0.50*0.7*len(features))
-	att_pos_size = int(0.50*0.7*len(att_svms))
-	obj_pos_size = int(0.50*0.7*len(obj_svms))
+	f_pos_size = int(0.50*len(features))
+	att_pos_size = int(0.50*len(att_svms))
+	obj_pos_size = int(0.50*len(obj_svms))
 
-	f_neg_size = int(0.7*len(features))
-	att_neg_size = int(0.7*len(att_svms))
-	obj_neg_size = int(0.7*len(obj_svms))
+	f_neg_size = int(len(features))
+	att_neg_size = int(len(att_svms))
+	obj_neg_size = int(len(obj_svms))
 
 	f_temp = features[:f_pos_size]
 	for j in f_temp :
@@ -73,19 +80,20 @@ for i in p :
 	obj_svms_temp = obj_svms[obj_pos_size:obj_neg_size]
 	for j in obj_svms_temp :
 		obj_svms_train_neg.append(j)
-	
+
+test_data = {}
+for i in p_test :	
 	f_temp = []
 	att_svms_temp = []
 	obj_svms_temp = []
-	f_temp = features[f_neg_size:]
-	for j in f_temp :
+	for j in i['features'] :
 		features_test.append(j)
-	att_svms_temp = att_svms[att_neg_size:]
-	for j in att_svms_temp :
-		att_svms_test.append(j)
-	obj_svms_temp = obj_svms[obj_neg_size:]
-	for j in obj_svms_temp :
-		obj_svms_test.append(j)
+	for j in i['pId']:
+		pair_keys_test.append(j)
+
+test_data['features'] = features_test
+test_data['pIds'] = pair_keys_test
+
 
 
 shuffle(features_train_neg)
@@ -137,16 +145,9 @@ osvm = open('../pkl/network_train_obj_svm.pkl', 'wb')
 pickle.dump(o_svms_train, osvm)
 osvm.close()
 
+
 f = open('../pkl/network_test_features.pkl', 'wb')
-pickle.dump(features_test, f)
+pickle.dump(test_data, f)
 f.close()
-
-asvm = open('../pkl/network_test_att_svm.pkl', 'wb')
-pickle.dump(att_svms_test, asvm)
-asvm.close()
-
-osvm = open('../pkl/network_test_obj_svm.pkl', 'wb')
-pickle.dump(obj_svms_test, osvm)
-osvm.close()
 
 

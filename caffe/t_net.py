@@ -106,8 +106,7 @@ for i in y_array:
 """
 
 with tf.Session() as sess:
-    sess.run(init)
-        
+    sess.run(init)        
     # Training cycle
     training_epochs = 10
     for epoch in range(training_epochs):
