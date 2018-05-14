@@ -1,0 +1,3 @@
+classifier_file = '../pkl/accuracy_file.pkl'
+pkl_file = open(classifier_file, 'wb')
+accuracy = pickle.load(pkl_file)
