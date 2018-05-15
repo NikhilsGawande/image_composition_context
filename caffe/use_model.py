@@ -10,8 +10,9 @@ import sys
 import numpy as np
 import caffe
 import caffe.io
+import pickle
 
-input_image_file = "input.jpeg" 
+input_image_file = "input.jpg" 
 #output_file = "output_file"
 model_file = "./VGG_CNN_M_1024.caffemodel"
 deploy_prototxt = "./deploy.prototxt"
@@ -43,11 +44,15 @@ net.blobs['data'].data[...] = transformer.preprocess('data', img)
 
 
 output = net.forward()
+output_file = open('../pkl/image_feature.pkl', 'wb')
+feat_vector = net.blobs[layer].data[0]
+pickle.dump(feat_vector, output_file)
+
+
 """
 with open(output_file, 'w') as f:
         np.savetxt(f, net.blobs[layer].data[0], fmt='%.4f', delimiter='\n')
 
-"""
 
 #Predicting label
 print (input_image_file, output['prob'].argmax())
@@ -55,7 +60,7 @@ label_mapping = np.loadtxt("synset_words.txt", str, delimiter='\t')
 best_n = net.blobs['prob'].data[0].flatten().argsort()[-1:-6:-1]
 print (label_mapping[best_n])
 print ("\n")
-
+"""
 
 
 
