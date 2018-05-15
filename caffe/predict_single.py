@@ -1,7 +1,11 @@
 import pickle 
 import tensorflow as tf
 import numpy as np 
+import im_utils 
 
+a = im_utils.load('../pkl/mitstates_data/split_meta_info.pklz')
+
+pairs = a['pairNames']
 tf_cf = tf.placeholder(tf.float32, [1024], name='complex_featur')
 tf_feat = tf.placeholder(tf.float32, [1024], name='feature')
 
@@ -30,5 +34,9 @@ score = []
 for cf in complex_features :
 	dot_pr = sess.run(dot_pro, feed_dict= {tf_cf:cf , tf_feat:feat}) 
 	score.append(dot_pr)
-print(sorted(range(len(score)), key=lambda i: score[i])[-5:])
+top_five = sorted(range(len(score)), key=lambda i: score[i])[-5:]
+print('Output')
+for i in top_five :
+	print(pairs[i], end=' ') 
+print()
 #print(features['pIds'][i])
